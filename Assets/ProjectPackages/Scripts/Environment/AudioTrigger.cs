@@ -11,11 +11,17 @@ public class AudioTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        TriggerActive = true;
+        if (collision.TryGetComponent(out Player player))
+        {
+            TriggerActive = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        TriggerActive = false;
+        if (collision.TryGetComponent(out Player player))
+        {
+            TriggerActive = false;
+        }
     }
 }

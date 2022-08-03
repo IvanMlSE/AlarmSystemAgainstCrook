@@ -1,5 +1,9 @@
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator))]
+
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]
@@ -37,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        _moveVector2.x = Input.GetAxis(Horizontal);
+        _moveVector2.x = Input.GetAxisRaw(Horizontal);
         _rigidbody2D.velocity = new Vector2(_moveVector2.x * _speed, _rigidbody2D.velocity.y);
 
         _animator.SetFloat(PlayerAnimatorController.Params.ParamMoveX, Mathf.Abs(_moveVector2.x));

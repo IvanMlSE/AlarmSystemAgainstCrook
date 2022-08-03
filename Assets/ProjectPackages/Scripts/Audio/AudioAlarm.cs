@@ -2,7 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 
-public class ChangingSoundVolume : MonoBehaviour
+public class AudioAlarm: MonoBehaviour
 {
     [SerializeField]
     private AudioTrigger _audioTrigger;
