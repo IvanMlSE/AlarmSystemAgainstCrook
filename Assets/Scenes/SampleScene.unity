@@ -1626,7 +1626,7 @@ GameObject:
   - component: {fileID: 714089324}
   - component: {fileID: 714089326}
   m_Layer: 0
-  m_Name: AudioTrigger
+  m_Name: Detector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1951,6 +1951,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f9f40c44028e648ac42eb45cc75eb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  detector: {fileID: 714089326}
   _audioSource: {fileID: 0}
   _rateOfRise: 0.25
 --- !u!1 &1441733314

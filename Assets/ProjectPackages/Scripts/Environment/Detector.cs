@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class AudioTrigger : MonoBehaviour
+public class Detector : MonoBehaviour
 {
-    public static event UnityAction<bool> Triggered;
+    public event UnityAction<bool> Triggered;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

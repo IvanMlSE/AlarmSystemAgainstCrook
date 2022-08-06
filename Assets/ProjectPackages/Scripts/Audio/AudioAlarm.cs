@@ -6,6 +6,9 @@ using UnityEngine;
 public class AudioAlarm : MonoBehaviour
 {
     [SerializeField]
+    private Detector detector;
+
+    [SerializeField]
     private AudioSource _audioSource;
 
     [SerializeField]
@@ -20,12 +23,12 @@ public class AudioAlarm : MonoBehaviour
 
     private void OnEnable()
     {
-        AudioTrigger.Triggered += PlayAudio;
+        detector.Triggered += PlayAudio;
     }
 
     private void OnDisable()
     {
-        AudioTrigger.Triggered -= PlayAudio;
+        detector.Triggered -= PlayAudio;
     }
 
     private void Start()
