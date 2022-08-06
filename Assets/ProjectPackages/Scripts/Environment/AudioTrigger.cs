@@ -1,19 +1,15 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AudioTrigger : MonoBehaviour
 {
-    public bool TriggerActive { get; private set; }
-
-    private void Start()
-    {
-        TriggerActive = false;
-    }
+    public static event UnityAction<bool> Triggered;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out Player player))
         {
-            TriggerActive = true;
+            Triggered?.Invoke(true);
         }
     }
 
@@ -21,7 +17,7 @@ public class AudioTrigger : MonoBehaviour
     {
         if (collision.TryGetComponent(out Player player))
         {
-            TriggerActive = false;
+            Triggered?.Invoke(false);
         }
     }
 }

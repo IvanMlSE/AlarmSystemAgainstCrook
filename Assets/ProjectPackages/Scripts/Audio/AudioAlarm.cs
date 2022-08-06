@@ -1,58 +1,99 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 
-public class AudioAlarm: MonoBehaviour
+public class AudioAlarm : MonoBehaviour
 {
-    [SerializeField]
-    private AudioTrigger _audioTrigger;
-
-    [SerializeField]
-    private AudioClip _audioClipe;
-
     [SerializeField]
     private AudioSource _audioSource;
 
     [SerializeField]
-    private float _rateOfRise = 0.5f;
+    private float _rateOfRise = 0.25f;
+
+    private Coroutine _coroutineVolumeController;
 
     private const float _minVolume = 0f;
     private const float _maxVolume = 1f;
 
+    private bool _loopCycleCoroutineChangeVolume;
+
+    private void OnEnable()
+    {
+        AudioTrigger.Triggered += PlayAudio;
+    }
+
+    private void OnDisable()
+    {
+        AudioTrigger.Triggered -= PlayAudio;
+    }
+
     private void Start()
     {
         _audioSource = GetComponent<AudioSource>();
+
+        _audioSource.volume = _minVolume;
     }
 
-    private void FixedUpdate()
+    private void PlayAudio(bool triggered)
     {
-        PlayAudio();
-    }
-
-    private void PlayAudio()
-    {
-        if (_audioTrigger.TriggerActive == true)
+        if (triggered == true)
         {
-            ChangeVolume(_maxVolume);
-
-            if (_audioSource.isPlaying == false)
-            {
-                _audioSource.PlayOneShot(_audioClipe);
-            }
+            SwitchAudio(Selector.On);
+            RestartCoroutineChangeVolume(_maxVolume);
         }
         else
         {
-            ChangeVolume(_minVolume);
-
-            if (_audioSource.volume == 0f)
-            {
-                _audioSource.Stop();
-            }
+            RestartCoroutineChangeVolume(_minVolume);
         }
     }
 
-    private void ChangeVolume(float targetVolume)
+    private void RestartCoroutineChangeVolume(float targetVolume)
     {
-        _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, targetVolume, _rateOfRise * Time.fixedDeltaTime);
+        if (_coroutineVolumeController != null)
+        {
+            StopCoroutine(_coroutineVolumeController);
+        }
+
+        _coroutineVolumeController = StartCoroutine(CoroutineChangeVolume(targetVolume));
+    }
+
+    private IEnumerator CoroutineChangeVolume(float targetVolume)
+    {
+        while (_loopCycleCoroutineChangeVolume == true)
+        {
+            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, targetVolume, _rateOfRise * Time.fixedDeltaTime);
+
+            if (_audioSource.volume == _minVolume)
+            {
+                SwitchAudio(Selector.Off);
+            }
+
+            yield return null;
+        }
+    }
+
+    private void SwitchAudio(Selector selector)
+    {
+        if (selector == Selector.On)
+        {
+            _audioSource.Play();
+            _audioSource.loop = true;
+
+            _loopCycleCoroutineChangeVolume = true;
+        }
+        else if (selector == Selector.Off)
+        {
+            _audioSource.Stop();
+            _audioSource.loop = false;
+
+            _loopCycleCoroutineChangeVolume = false;
+        }
+    }
+
+    private enum Selector
+    {
+        On,
+        Off
     }
 }
